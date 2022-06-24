@@ -7,13 +7,14 @@ Example:
     $ python app.py
 """
 import csv
+from email import header
 import sys
 import fire
 import questionary
 from pathlib import Path
 
 from qualifier.utils.fileio import load_csv
-from qualifier.utils.fileio import save_csv
+# from qualifier.utils.fileio import save_csv
 
 from qualifier.utils.calculators import (
     calculate_monthly_debt_ratio,
@@ -104,6 +105,18 @@ def find_qualifying_loans(bank_data, credit_score, debt, income, loan, home_valu
     return bank_data_filtered
 
 
+def save_csv(qualifying_loans):
+
+    csvpath = Path(questionary.text("Input the file path where you would like to save the qualifying loans:").ask())
+    header = ["Lender","Max Loan Amount","Max LTV","Max DTI","Min Credit Score","Interest Rate"]
+
+    with open(csvpath,"w") as csvfile:
+        csvwriter = csv.writer(csvfile,delimiter=',')
+        csvwriter.writerow(header)
+        for loan in qualifying_loans:
+            csvwriter.writerow(loan)
+
+
 def save_qualifying_loans(qualifying_loans):
     """Saves the qualifying loans to a CSV file.
 
@@ -111,17 +124,39 @@ def save_qualifying_loans(qualifying_loans):
         qualifying_loans (list of lists): The qualifying bank loans.
     """
 
+
     # @TODO: Complete the usability dialog for savings the CSV Files.
     # YOUR CODE HERE!
-    save_qualifying_loans = questionary.confirm("Do you want to save the Qualifying Loans?").ask()
+
+
+    save_loans = questionary.confirm("Do you want to save the Qualifying Loans?").ask()
     
-    csvpath = questionary.text("Enter a file path to save the qualifying loans:").ask()
-    csvpath = Path(csvpath)
-    if not csvpath.exists():
-        sys.exit(f"Oops! Can't find this path: {csvpath}")
+    if save_loans == True:
+        if qualifying_loans:
+            save_csv(qualifying_loans)
+            print("Your loans have been saved.")
+        else:
+            print("There are no loans you qualify for.")
+            sys.exit()
+    else: 
+        print("Your loans will not be saved.")
+        sys.exit()
 
-    return save_csv
+    # csvpath = questionary.text("Enter a file path to save the qualifying loans:").ask()
+    # csvpath = Path(csvpath)
+    # if not csvpath.exists():
+    #     sys.exit(f"Oops! Can't find this path: {csvpath}")
 
+    # return save_csv
+# def save_csv(csvpath, data, header =None):
+#     """Save csv file and implement data to file, import list of list
+#     from csvpath to qualify loan"""
+#     with open(csvpath, "w", newline="") as csvfile:
+#         csvwriter = csv.writer(csvfile, delimiter=" ,")
+#         if header:
+#             csvwriter.writerow(header)
+#         csvwriter.writerows(data)
+#         return save_csv(qualifying_loans)
 
 def run():
     """The main function for running the script."""

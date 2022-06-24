@@ -31,11 +31,19 @@ def load_csv(csvpath):
 
 
 
-def save_csv():
-    qualifying_loans = []
-    csvpath = Path("qualifying_loans.csv")
-    with open(csvpath, 'W', newline='') as csvfile:
-        csvwriter = csv.writer(csvfile)
+# def save_csv():
+#     qualifying_loans = []
+#     csvpath = Path("qualifying_loans.csv")
+#     with open(csvpath, 'W', newline='') as csvfile:
+#         csvwriter = csv.writer(csvfile)
 
-        for row in csvwriter:
-            csvwriter.writerow(row.values())
+#         for row in csvwriter:
+#             csvwriter.writerow(row.values())
+# def save_csv(csvpath, data, header =None):
+#     """Save csv file and implement data to file, import list of list
+#     from csvpath to qualify loan"""
+#     with open(csvpath, "w", newline="") as csvfile:
+#         csvwriter = csv.writer(csvfile, delimiter=" ,")
+#         if header:
+#             csvwriter.writerow(header)
+#         csvwriter.writerows(data)
